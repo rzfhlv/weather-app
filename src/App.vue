@@ -2,10 +2,11 @@
 import { ref } from 'vue'
 import { useWeather } from './composables/useWeather.ts'
 import WeatherCard from './components/WeatherCard.vue'
+import ForecastCard from './components/ForecastCard.vue'
 
 const searchQuery = ref<string>('')
 
-const { weatherData, cityInfo, loading, error, suggestion, fetchWeather } = useWeather()
+const { weatherData, forecastData, cityInfo, loading, error, suggestion, fetchWeather } = useWeather()
 
 const handleSearch = () => {
   fetchWeather(searchQuery.value)
@@ -57,6 +58,8 @@ const handleSearch = () => {
 
       <div v-if="!loading" class="block w-full">
         <WeatherCard v-if="weatherData && cityInfo" :weather="weatherData" :city="cityInfo" />
+
+        <ForecastCard v-if="weatherData" :days="forecastData" />
       </div>
     </div>
   </div>

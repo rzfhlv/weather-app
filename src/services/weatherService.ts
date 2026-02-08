@@ -17,12 +17,11 @@ export interface CurrentWeather {
   time: string
 }
 
-export interface WeatherResponse {
-  current_weather: CurrentWeather
-  daily: {
-    temperature_2m_max: number[]
-    temperature_2m_min: number[]
-  }
+export interface ForecastDay {
+  date: string
+  maxTemp: number
+  minTemp: number
+  weatherCode: number
 }
 
 const BASE_URL_GEO = 'https://geocoding-api.open-meteo.com/v1/search'
@@ -42,13 +41,25 @@ export const geoService = {
 }
 
 export const weatherService = {
-  async getWeather(lat: number, lon: number): Promise<WeatherResponse> {
+  async getWeather(lat: number, lon: number): Promise<{current: CurrentWeather, forecast: ForecastDay[] }> {
     const res = await fetch(
-      `${BASE_URL_WEATHER}?latitude=${lat}&longitude=${lon}&current_weather=true&daily=temperature_2m_max,temperature_2m_min&timezone=auto`,
+      `${BASE_URL_WEATHER}?latitude=${lat}&longitude=${lon}&current_weather=true&daily=temperature_2m_max,temperature_2m_min,weathercode&timezone=auto`,
     )
 
     if (!res.ok) throw new Error('Gagal mengambil data cuaca')
 
-    return await res.json()
+    const data = await res.json()
+
+    const forecast: ForecastDay[] = data.daily.time.map((t: string, index: number) => ({
+      date: t,
+      maxTemp: data.daily.temperature_2m_max[index],
+      minTemp: data.daily.temperature_2m_min[index],
+      weatherCode: data.daily.weathercode[index]
+    }))
+
+    return {
+      current: data.current_weather,
+      forecast: forecast
+    }
   },
 }

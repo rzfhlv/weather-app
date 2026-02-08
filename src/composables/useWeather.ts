@@ -1,9 +1,10 @@
 import { ref } from 'vue'
 import { geoService, weatherService } from '../services/weatherService'
-import type { CityResult, CurrentWeather } from '../services/weatherService'
+import type { CityResult, CurrentWeather, ForecastDay } from '../services/weatherService'
 
 export function useWeather() {
   const weatherData = ref<CurrentWeather | null>(null)
+  const forecastData = ref<ForecastDay[]>([])
   const cityInfo = ref<CityResult | null>(null)
   const loading = ref<boolean>(false)
   const error = ref<string | null>(null)
@@ -23,8 +24,9 @@ export function useWeather() {
       }
       cityInfo.value = city
 
-      const weather = await weatherService.getWeather(city.latitude, city.longitude)
-      weatherData.value = weather.current_weather
+      const { current, forecast } = await weatherService.getWeather(city.latitude, city.longitude)
+      weatherData.value = current
+      forecastData.value = forecast
     } catch (err: any) {
       error.value = err.message || 'Terjadi kesalahan'
       weatherData.value = null
@@ -37,6 +39,7 @@ export function useWeather() {
 
   return {
     weatherData,
+    forecastData,
     cityInfo,
     loading,
     error,
