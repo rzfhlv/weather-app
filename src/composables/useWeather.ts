@@ -7,12 +7,14 @@ export function useWeather() {
   const cityInfo = ref<CityResult | null>(null)
   const loading = ref<boolean>(false)
   const error = ref<string | null>(null)
+  const suggestion = ref<boolean>(true)
 
   const fetchWeather = async (query: string) => {
     if (!query) return
 
     loading.value = true
     error.value = null
+    suggestion.value = false
 
     try {
       const city = await geoService.searchCity(query)
@@ -27,6 +29,7 @@ export function useWeather() {
       error.value = err.message || 'Terjadi kesalahan'
       weatherData.value = null
       cityInfo.value = null
+      suggestion.value = true
     } finally {
       loading.value = false
     }
@@ -37,6 +40,7 @@ export function useWeather() {
     cityInfo,
     loading,
     error,
+    suggestion,
     fetchWeather,
   }
 }

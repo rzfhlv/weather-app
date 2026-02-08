@@ -5,7 +5,7 @@ import WeatherCard from './components/WeatherCard.vue'
 
 const searchQuery = ref<string>('')
 
-const { weatherData, cityInfo, loading, error, fetchWeather } = useWeather()
+const { weatherData, cityInfo, loading, error, suggestion, fetchWeather } = useWeather()
 
 const handleSearch = () => {
   fetchWeather(searchQuery.value)
@@ -40,7 +40,7 @@ const handleSearch = () => {
         </button>
       </div>
 
-      <div v-if="loading" class="text-white text-center py-4 animate-pulse">
+      <div v-if="loading" class="text-white text-center animate-pulse">
         Sedang mencari lokasi...
       </div>
 
@@ -51,12 +51,12 @@ const handleSearch = () => {
         {{ error }}
       </div>
 
-      <div v-if="!loading" class="block w-full">
-        <WeatherCard v-if="weatherData && cityInfo" :weather="weatherData" :city="cityInfo" />
+      <div v-if="suggestion" class="text-white text-center">
+        <p class="text-sm">Masukan nama kota untuk melihat cuaca.</p>
       </div>
 
-      <div v-else-if="!loading" class="text-white text-center py-4">
-        <p class="text-sm">Masukan nama kota untuk melihat cuaca.</p>
+      <div v-if="!loading" class="block w-full">
+        <WeatherCard v-if="weatherData && cityInfo" :weather="weatherData" :city="cityInfo" />
       </div>
     </div>
   </div>
