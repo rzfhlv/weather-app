@@ -15,9 +15,9 @@ const handleSearch = () => {
 
 <template>
   <div
-    class="min-h-screen bg-gradient-to-br from-blue-500 to-indigo-700 flex items-center justify-center p-6"
+    class="min-h-screen bg-gradient-to-br from-blue-500 to-indigo-700 items-center justify-center p-6"
   >
-    <div class="w-full max-w-md mt-10">
+    <div class="max-w-md mx-auto mt-6 text-center mb-12">
       <div class="text-center mb-8">
         <h1 class="text-4xl font-extrabold text-white tracking-tight drop-shadow-md">
           Sky<span class="text-blue-300">Cast</span>
@@ -25,7 +25,7 @@ const handleSearch = () => {
         <p class="text-white text-sm mt-1">Prakiraan cuaca akurat dalam genggaman</p>
       </div>
 
-      <div class="flex flex-row gap-2 mb-8">
+      <div class="flex gap-2 mb-8">
         <input
           v-model="searchQuery"
           @keyup.enter="handleSearch"
@@ -40,7 +40,9 @@ const handleSearch = () => {
           {{ loading ? '...' : 'Cari' }}
         </button>
       </div>
+    </div>
 
+    <div class="max-w-6xl mx-auto">
       <div v-if="loading" class="text-white text-center animate-pulse">
         Sedang mencari lokasi...
       </div>
@@ -56,10 +58,14 @@ const handleSearch = () => {
         <p class="text-sm">Masukan nama kota untuk melihat cuaca.</p>
       </div>
 
-      <div v-if="!loading" class="block w-full">
-        <WeatherCard v-if="weatherData && cityInfo" :weather="weatherData" :city="cityInfo" />
-
-        <ForecastCard v-if="weatherData" :days="forecastData" />
+      <div v-if="!loading" class="flex flex-col lg:flex-row gap-8 items-stretch">
+        <div class="w-full lg:w-[380px] flex">
+          <WeatherCard v-if="weatherData && cityInfo" :weather="weatherData" :city="cityInfo" />
+        </div>
+        
+        <div class="w-full lg:flex-1 flex flex-col h-full">
+          <ForecastCard v-if="weatherData" :days="forecastData" />
+        </div>
       </div>
     </div>
   </div>

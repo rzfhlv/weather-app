@@ -21,20 +21,31 @@ const formattedTime = new Date(props.weather.time).toLocaleString('id-ID', {
   hour: '2-digit',
   minute: '2-digit',
 })
+
+const getWeatherLabel = (code: number) => {
+  if (code === 0) return '☀️';
+  if (code < 4) return '☁️';
+  if (code < 70) return '🌧️';
+  return '⛈️';
+}
 </script>
 
 <template>
   <div
-    class="bg-white/20 backdrop-blur-lg p-8 rounded-[2rem] text-white shadow-2xl border border-white/30 transition-all duration-500 hover:scale-[1.02]"
+    class="bg-white/20 backdrop-blur-lg p-8 rounded-[2rem] text-white shadow-2xl border border-white/30 transition-all duration-500 hover:scale-[1.02] flex flex-col justify-between w-full h-full"
   >
-    <div class="text-center mb-6">
+    <div class="text-center">
       <h2 class="text-3xl font-bold tracking-tight">{{ city.name }}</h2>
       <p class="text-sm font-medium opacity-70 mt-1 uppercase tracking-widest">
         {{ city.admin ? `${city.admin}` : '' }}{{ city.country }}
       </p>
     </div>
 
-    <div class="flex flex-col items-center py-4">
+    <div class="text-8xl text-center py-2">
+      {{ getWeatherLabel(weather.weathercode) }}
+    </div>
+
+    <div class="flex flex-col justify-center items-center py-4">
       <div class="text-7xl font-black drop-shadow-lg mb-2">
         {{ Math.round(weather.temperature) }}°C
       </div>
